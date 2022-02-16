@@ -3,10 +3,23 @@ $(document).ready(function() {
 
 
     // link api and api key
+    var apiKey = "9e9a3c70798d20916b97cab9a356da93";
+    var units = "imperial";
+
+    var userFormEl = document.querySelector("#user-form");
+    var searchHistory = document.querySelector("#recently-searched");
+    var todaysWeather = document.querySelector("#todays-weather");
+    var futureForcast = document.querySelector("#5-day-weather");
+
+
 
     // when search button is clicked, pull data for the searched city.
+    $("#search-btn").on("click", function() {
+
+    });
 
     // api call for single days weather
+    
 
     // api call for 5 day forcast displayed as a card deck 
 
