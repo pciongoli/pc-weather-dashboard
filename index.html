@@ -20,12 +20,11 @@
         <div class="row">
             <!-- section for divs on left of page (Search and Recent Searches) -->
             
-            <section>
+            <section class="col-lg-4">
                 
                 <!-- container for divs -->
-                <div class="search-items col-lg-4">
-                    
-                    <!-- search form for city -->
+                <div class="search-items">
+                
                     <form>
                         <label class="form-label" for="search-form">Search for a City:</label>
                         <input type="text" name="city-weather" id="city-weaather" class="form-control card" autofocus="true">
@@ -46,31 +45,32 @@
 
             <!-- section for divs on right of page ( 1 day and 5 day forcasts) -->
             
-            <section>
+            <section class="col-lg-8">
 
-                <div class="col-lg-8">
+                <div>
 
                     <!-- div for todays forcast -->
-                    <div id="todays-weather" class="row card-body">
-                        <h2 class="card-title">Newark (3/30/2022)</h2>
-                        <p class="card-text">Temp: </p>
-                        <p class="card-text">Wind: </p>
-                        <p class="card-text">Humidity: </p>
-                        <p class="card-text">UV Index: </p>
-
-
+                    <div class="container">
+                        <div id="todays-weather" class="row card-body">
+                            <h2 class="card-title">Newark (3/30/2022)</h2>
+                            <p class="card-text">Temp: </p>
+                            <p class="card-text">Wind: </p>
+                            <p class="card-text">Humidity: </p>
+                            <p class="card-text">UV Index: </p>
+                        </div>
                     </div>
-
                     <!-- -->
 
                     <!-- div for five day forcast -->
-                    <div id="5-day-weather" class="row card-body">
-                        <h3 class="card-title">5-Day Forcast:</h3>
-                        <p class="card-text">Temp: </p>
-                        <p class="card-text">Wind: </p>
-                        <p class="card-text">Humidity: </p>
+                    <div class="container">
+                        <div id="5-day-weather" class="row card-body">
+                            <h3 class="card-title">5-Day Forcast:</h3>
+                            <p class="card-text">Temp: </p>
+                            <p class="card-text">Wind: </p>
+                            <p class="card-text">Humidity: </p>
+                        </div>
                     </div>
-                    
+
                 </div>
                 
             </section>
