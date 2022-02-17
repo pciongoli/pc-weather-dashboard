@@ -1,5 +1,5 @@
 // allow everything to load in at once
-$(document).ready(function() {
+
 
 
     // link api and api key
@@ -9,18 +9,22 @@ $(document).ready(function() {
     var userFormEl = document.querySelector("#user-form");
     var searchHistory = document.querySelector("#recently-searched");
     var todaysWeather = document.querySelector("#todays-weather");
-    var futureForcast = document.querySelector("#5-day-weather");
 
     // when search button is clicked, pull data for the searched city.
-    $("#search-btn").on("click", function() {
-        fetch ('https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid=9e9a3c70798d20916b97cab9a356da93')
-        .then(response => response.json() {
-        .then(data => {
-          console.log(data);  
-        })
-        });
+    var getCurrentWeather = function(city) {
+        var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=latitude&=longitude&q=" + city + "&appid=" + apiKey;
 
-    });
+            fetch(apiUrl).then(function(response) {
+                if (response.ok) {
+                response.json()
+                } else {
+                    alert('error')
+                }
+            });
+
+    }
+
+
 
     // api call for single days weather
     
@@ -29,5 +33,3 @@ $(document).ready(function() {
 
     // when a city has been searched, save the city and put into recently searched as a list element
 
-
-});
