@@ -1,32 +1,54 @@
-// allow everything to load in at once
-
-// link api and api key
+// Add Global Variables
+var searchHistory = [];
+var weatherApiUrl = "https://api.openweathermap.org";
 var apiKey = "9e9a3c70798d20916b97cab9a356da93";
-var units = "imperial";
 
+// Add DOM Elements
 var userFormEl = document.querySelector("#user-form");
-var searchHistory = document.querySelector("#recently-searched");
-var todaysWeather = document.querySelector("#todays-weather");
+var searchInput = document.querySelector("search-input");
+var searchHistory = document.querySelector("#search-history");
+var todayWeather = document.querySelector("#today-weather");
+var forcastWeather = document.querySelector("weather-forcast");
 
-// when search button is clicked, pull data for the searched city.
-var getCurrentWeather = function (city) {
-   var apiUrl =
-      "https://api.openweathermap.org/data/2.5/onecall?lat=latitude&=longitude&q=" +
-      city +
-      "&appid=" +
-      apiKey;
+// Need to add plugins for timezone
 
-   fetch(apiUrl).then(function (response) {
-      if (response.ok) {
-         response.json();
-      } else {
-         alert("error");
-      }
-   });
-};
+// Need function for displaying search history
+function renderSearchHistory() {
+   // start from bottom of array - count down in order to disploy most reacent search first
+   // ' ' access city name when click handler event is invoked
+}
 
-// api call for single days weather
+// Need function to update local storage history - then update the display history
+function appendToHistory(search) {}
 
-// api call for 5 day forcast displayed as a card deck
+// retrieve search histroy from localStorage
+function initSearchHistory() {}
 
-// when a city has been searched, save the city and put into recently searched as a list element
+// Need function to fetch from weather api and display current weather
+function renderCurrentWeather(city, weather, timezone) {
+   // Create variables to store response data from fetch
+   // createElements
+   // setAttributes
+}
+
+// Need function to fetch data from weather api to display the daily forcast
+function renderForecastCard(forecast, timezone) {
+   // create variables for the data from the api
+   // need to create card elements
+   // Need to append elemnts to card
+   // setAttribute
+   // Need to add content to elements
+}
+
+// Need function to display a 5 day weather forcast
+function renderForcast(dailyForcast, timezone) {}
+
+// Need function to fetch weather based on geolocation and display current/future weather
+
+// Need function to fetch coordinates
+
+// Need function to handle search form submit
+
+// Need function to handle search history button
+
+// Need function to initialize search histroy form
