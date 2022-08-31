@@ -1,5 +1,6 @@
 // Add Global Variables
 var searchHistory = [];
+// format weather api url
 var weatherApiUrl = "https://api.openweathermap.org";
 var apiKey = "9e9a3c70798d20916b97cab9a356da93";
 
