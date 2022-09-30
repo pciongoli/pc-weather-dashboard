@@ -45,11 +45,50 @@ function renderForecastCard(forecast, timezone) {
 function renderForcast(dailyForcast, timezone) {}
 
 // Need function to fetch weather based on geolocation and display current/future weather
+function fetchWeather(location) {
+   // latitude
+   var { lat } = location;
+   // longitude
+   var { lon } = location;
+   var city = location.name;
+   var apiUrl = `${weatherApiRootUrl}/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=${weatherApiKey}`;
 
+   fetch(apiUrl)
+      .then(function (res) {
+         return res.json();
+      })
+      .then(function (data) {
+         renderItems(city, data);
+      })
+      .catch(function (err) {
+         console.error(err);
+      });
+}
 // Need function to fetch coordinates
+function fetchCoords(search) {
+   var apiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${weatherApiKey}`;
 
+   fetch(apiUrl)
+      .then(function (res) {
+         return res.json();
+      })
+      .then(function (data) {
+         if (!data[0]) {
+            alert("No location found");
+         } else {
+            appendToHistory(serach);
+            fetchWeather(data[0]);
+         }
+      })
+      .catch(function (err) {
+         console.error(err);
+      });
+}
 // Need function to handle search form submit
+function handleFormSubmit(e) {}
 
 // Need function to handle search history button
+function handleSearchHistory(e) {}
 
-// Need function to initialize search histroy form
+// Need to initialize search histroy form
+initSearchHistory();
