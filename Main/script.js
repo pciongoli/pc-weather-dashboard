@@ -5,22 +5,21 @@ var weatherApiUrl = "https://api.openweathermap.org";
 var apiKey = "9e9a3c70798d20916b97cab9a356da93";
 
 // Add DOM Elements
-var userFormEl = document.querySelector("#user-form");
+var searchForm = document.querySelector("#search-form");
 var searchInput = document.querySelector("search-input");
-var todayForecast = document.querySelector("#today-weather");
-var forecastWeatherCont = document.querySelector("weather-forecast");
+var todayForecast = document.querySelector("#today");
+var forecastWeatherCont = document.querySelector("forecast");
 var searchHistoryCont = document.querySelector("#history");
 
-// Need to add plugins for timezone
+// Add plugins for timezone
 dayjs.extend(window.dayjs_plugin_utc);
 dayjs.extend(window.dayjs_plugin_timezone);
 
-// Need function for displaying search history
+// Function to display the search history list.
 function renderSearchHistory() {
    searchHistoryCont.innerHTML = "";
-   // start from bottom of array - count down in order to disploy most reacent search first
-   // '' access city name when click handler event is invoked
 
+   // Start at bottom of array
    for (var i = searchHistory.length - 1; i >= 0; i--) {
       var btn = document.createElement("button");
       btn.setAttribute("type", "button");
@@ -33,7 +32,8 @@ function renderSearchHistory() {
       searchHistoryCont.append(btn);
    }
 }
-// Need function to update local storage history - then update the display history
+
+// Function to update local storage history - then update the display history
 function appendToHistory(search) {
    // return if there is no search
    if (searchHistory.indexOf(search) !== -1) {
@@ -45,7 +45,7 @@ function appendToHistory(search) {
    renderSearchHistory();
 }
 
-// retrieve search histroy from localStorage
+// Retrieve search histroy from localStorage
 function initSearchHistory() {
    var storedHistory = localStorage.getItem("search-history");
    if (storedHistory) {
@@ -54,7 +54,7 @@ function initSearchHistory() {
    renderSearchHistory();
 }
 
-// Need function to fetch from weather api and display current weather
+// Function to fetch from weather api and display current weather
 function renderCurrentWeather(city, weather, timezone) {
    var date = dayjs().tz(timezone).format("M/D/YYYY");
 
@@ -108,7 +108,6 @@ function renderCurrentWeather(city, weather, timezone) {
       uviBadge.classList.add("btn-danger");
    }
 
-   // append to container
    uviBadge.textContent = uvi;
    uvEl.append(uviBadge);
    cardBody.append(uvEl);
@@ -117,7 +116,7 @@ function renderCurrentWeather(city, weather, timezone) {
    todayForecast.append(card);
 }
 
-// Need function to fetch data from weather api to display the daily forecast
+// Function to fetch data from weather api to display the daily forecast
 function renderForecastCard(forecast, timezone) {
    // create variables for the data from the api
    var unixTs = forecast.dt;
@@ -127,7 +126,7 @@ function renderForecastCard(forecast, timezone) {
    var { humidity } = forecast;
    var windMph = forecast.wind_speed;
 
-   // need to create card elements
+   // create card elements
    var col = document.createElement("div");
    var card = document.createElement("div");
    var cardBody = document.createElement("div");
@@ -160,12 +159,11 @@ function renderForecastCard(forecast, timezone) {
    windEl.textContent = `Wind: ${windMph} MPH`;
    humidityEl.textContent = `Humidity: ${humidity} %`;
 
-   // append to forecastWeatherCont
    forecastWeatherCont.append(col);
 }
 
 // Need function to display a 5 day weather forecast
-function renderForecast(todayWeather, timezone) {
+function renderForecast(dailyForecast, timezone) {
    var startDt = dayjs().tz(timezone).add(1, "day").startOf("day").unix();
    var endDt = dayjs().tz(timezone).add(6, "day").startOf("day").unix();
 
@@ -178,9 +176,9 @@ function renderForecast(todayWeather, timezone) {
 
    forecastWeatherCont.innerHTML = "";
    forecastWeatherCont.append(headingCol);
-   for (var i = 0; i < todayWeather.length; i++) {
-      if (todayWeather[i].dt >= startDt && todayWeather[i].dt < endDt) {
-         renderForecastCard(todayWeather[i], timezone);
+   for (var i = 0; i < dailyForecast.length; i++) {
+      if (dailyForecast[i].dt >= startDt && dailyForecast[i].dt < endDt) {
+         renderForecastCard(dailyForecast[i], timezone);
       }
    }
 }
@@ -197,7 +195,7 @@ function fetchWeather(location) {
    // longitude
    var { lon } = location;
    var city = location.name;
-   var apiUrl = `${weatherApiRootUrl}/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=${weatherApiKey}`;
+   var apiUrl = `${weatherApiUrl}/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=${apiKey}`;
 
    fetch(apiUrl)
       .then(function (res) {
@@ -210,9 +208,10 @@ function fetchWeather(location) {
          console.error(err);
       });
 }
+
 // Need function to fetch coordinates
 function fetchCoords(search) {
-   var apiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${weatherApiKey}`;
+   var apiUrl = `${weatherApiUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${apiKey}`;
 
    fetch(apiUrl)
       .then(function (res) {
@@ -231,19 +230,20 @@ function fetchCoords(search) {
       });
 }
 // Need function to handle search form submit
-function handleFormSubmit(e) {
+function handleSearchFormSubmit(e) {
+   // Don't continue if there is nothing in the search form
    if (!searchInput.value) {
       return;
    }
 
    e.preventDefault();
-   var search = searchInput.trim();
+   var search = searchInput.value.trim();
    fetchCoords(search);
    searchInput.value = "";
 }
 
-// Need function to handle search history button
 function handleSearchHistory(e) {
+   // Don't do search if current elements is not a search history button
    if (!e.target.matches(".btn-history")) {
       return;
    }
@@ -253,7 +253,7 @@ function handleSearchHistory(e) {
    fetchCoords(search);
 }
 
-// Need to initialize search histroy form
+// initialize search history
 initSearchHistory();
-userFormEl.addEventListener("submit", handleFormSubmit);
+searchForm.addEventListener("submit", handleSearchFormSubmit);
 searchHistoryCont.addEventListener("click", handleSearchHistory);
