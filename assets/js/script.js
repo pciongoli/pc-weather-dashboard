@@ -8,8 +8,8 @@ var apiKey = "9e9a3c70798d20916b97cab9a356da93";
 var userFormEl = document.querySelector("#user-form");
 var searchInput = document.querySelector("search-input");
 var todayForecast = document.querySelector("#today-weather");
-var forecastWeatherCont = document.querySelector("weather-forcast");
-var searchHistoryCont = document.querySelector("#search-history");
+var forecastWeatherCont = document.querySelector("weather-forecast");
+var searchHistoryCont = document.querySelector("#history");
 
 // Need to add plugins for timezone
 dayjs.extend(window.dayjs_plugin_utc);
@@ -19,35 +19,35 @@ dayjs.extend(window.dayjs_plugin_timezone);
 function renderSearchHistory() {
    searchHistoryCont.innerHTML = "";
    // start from bottom of array - count down in order to disploy most reacent search first
-   // ' ' access city name when click handler event is invoked
+   // '' access city name when click handler event is invoked
 
-  for (var i = searchHistory.length - 1; i >= 0; i--) {
-    var btn = document.createElement('button');
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('aria-controls', 'today-weather weather-forecast');
-    btn.classList.add('history-btn', 'btn-history');
+   for (var i = searchHistory.length - 1; i >= 0; i--) {
+      var btn = document.createElement("button");
+      btn.setAttribute("type", "button");
+      btn.setAttribute("aria-controls", "today forecast");
+      btn.classList.add("history-btn", "btn-history");
 
-    // `data-search` allows access to city name when click handler is invoked
-    btn.setAttribute('data-search', searchHistory[i]);
-    btn.textContent = searchHistory[i];
-    searchHistoryCont.append(btn);}
-
+      // `data-search` allows access to city name when click handler is invoked
+      btn.setAttribute("data-search", searchHistory[i]);
+      btn.textContent = searchHistory[i];
+      searchHistoryCont.append(btn);
+   }
+}
 // Need function to update local storage history - then update the display history
 function appendToHistory(search) {
    // return if there is no search
-if (searchHistory.indexOf(search) !== -1) {
-   return;
-}
-searchHistory.push(search);
+   if (searchHistory.indexOf(search) !== -1) {
+      return;
+   }
+   searchHistory.push(search);
 
-localStorage.setItem('search-history', JSON.stringify(searchHistory));
-renderSearchHistory();
+   localStorage.setItem("search-history", JSON.stringify(searchHistory));
+   renderSearchHistory();
 }
 
 // retrieve search histroy from localStorage
 function initSearchHistory() {
-   function initSearchHistory() {
-   var storedHistory = localStorage.getItem('search-history');
+   var storedHistory = localStorage.getItem("search-history");
    if (storedHistory) {
       searchHistory = JSON.parse(storedHistory);
    }
@@ -117,7 +117,7 @@ function renderCurrentWeather(city, weather, timezone) {
    todayForecast.append(card);
 }
 
-// Need function to fetch data from weather api to display the daily forcast
+// Need function to fetch data from weather api to display the daily forecast
 function renderForecastCard(forecast, timezone) {
    // create variables for the data from the api
    var unixTs = forecast.dt;
@@ -164,7 +164,7 @@ function renderForecastCard(forecast, timezone) {
    forecastWeatherCont.append(col);
 }
 
-// Need function to display a 5 day weather forcast
+// Need function to display a 5 day weather forecast
 function renderForecast(todayWeather, timezone) {
    var startDt = dayjs().tz(timezone).add(1, "day").startOf("day").unix();
    var endDt = dayjs().tz(timezone).add(6, "day").startOf("day").unix();
@@ -176,17 +176,18 @@ function renderForecast(todayWeather, timezone) {
    heading.textContent = "5-Day Forecast:";
    headingCol.append(heading);
 
-   forecastWeatherCont.innerHTML = '';
-  forecastWeatherCont.append(headingCol);
-  for (var i = 0; i < todayWeather.length; i++) {
-    
-    if (todayWeather[i].dt >= startDt && todayWeather[i].dt < endDt) {
-      renderForecastCard(todayWeather[i], timezone);
+   forecastWeatherCont.innerHTML = "";
+   forecastWeatherCont.append(headingCol);
+   for (var i = 0; i < todayWeather.length; i++) {
+      if (todayWeather[i].dt >= startDt && todayWeather[i].dt < endDt) {
+         renderForecastCard(todayWeather[i], timezone);
+      }
+   }
 }
 
 function renderItems(city, data) {
-  renderCurrentWeather(city, data.current, data.timezone);
-  renderForecast(data.daily, data.timezone);
+   renderCurrentWeather(city, data.current, data.timezone);
+   renderForecast(data.daily, data.timezone);
 }
 
 // Need function to fetch weather based on geolocation and display current/future weather
@@ -221,7 +222,7 @@ function fetchCoords(search) {
          if (!data[0]) {
             alert("No location found");
          } else {
-            appendToHistory(serach);
+            appendToHistory(search);
             fetchWeather(data[0]);
          }
       })
@@ -255,4 +256,4 @@ function handleSearchHistory(e) {
 // Need to initialize search histroy form
 initSearchHistory();
 userFormEl.addEventListener("submit", handleFormSubmit);
-searchHistoryCont.addEventListener('click', handleSearchHistory);
+searchHistoryCont.addEventListener("click", handleSearchHistory);
