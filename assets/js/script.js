@@ -7,22 +7,24 @@ var apiKey = "9e9a3c70798d20916b97cab9a356da93";
 // Add DOM Elements
 var userFormEl = document.querySelector("#user-form");
 var searchInput = document.querySelector("search-input");
-var searchHistory = document.querySelector("#search-history");
-var todayWeather = document.querySelector("#today-weather");
-var forcastWeatherCont = document.querySelector("weather-forcast");
+var todayForecast = document.querySelector("#today-weather");
+var forecastWeatherCont = document.querySelector("weather-forcast");
+var searchHistoryCont = document.querySelector("#search-history");
 
 // Need to add plugins for timezone
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_timezone);
 
 // Need function for displaying search history
 function renderSearchHistory() {
-   searchHistoryContainer.innerHTML = "";
+   searchHistoryCont.innerHTML = "";
    // start from bottom of array - count down in order to disploy most reacent search first
    // ' ' access city name when click handler event is invoked
 
   for (var i = searchHistory.length - 1; i >= 0; i--) {
     var btn = document.createElement('button');
     btn.setAttribute('type', 'button');
-    btn.setAttribute('aria-controls', 'today forecast');
+    btn.setAttribute('aria-controls', 'today-weather weather-forecast');
     btn.classList.add('history-btn', 'btn-history');
 
     // `data-search` allows access to city name when click handler is invoked
@@ -31,10 +33,26 @@ function renderSearchHistory() {
     searchHistoryCont.append(btn);}
 
 // Need function to update local storage history - then update the display history
-function appendToHistory(search) {}
+function appendToHistory(search) {
+   // return if there is no search
+if (searchHistory.indexOf(search) !== -1) {
+   return;
+}
+searchHistory.push(search);
+
+localStorage.setItem('search-history', JSON.stringify(searchHistory));
+renderSearchHistory();
+}
 
 // retrieve search histroy from localStorage
-function initSearchHistory() {}
+function initSearchHistory() {
+   function initSearchHistory() {
+   var storedHistory = localStorage.getItem('search-history');
+   if (storedHistory) {
+      searchHistory = JSON.parse(storedHistory);
+   }
+   renderSearchHistory();
+}
 
 // Need function to fetch from weather api and display current weather
 function renderCurrentWeather(city, weather, timezone) {
@@ -95,8 +113,8 @@ function renderCurrentWeather(city, weather, timezone) {
    uvEl.append(uviBadge);
    cardBody.append(uvEl);
 
-   todayContainer.innerHTML = "";
-   todayContainer.append(card);
+   todayForecast.innerHTML = "";
+   todayForecast.append(card);
 }
 
 // Need function to fetch data from weather api to display the daily forcast
@@ -142,12 +160,12 @@ function renderForecastCard(forecast, timezone) {
    windEl.textContent = `Wind: ${windMph} MPH`;
    humidityEl.textContent = `Humidity: ${humidity} %`;
 
-   // append to forecastContainer
-   forecastContainer.append(col);
+   // append to forecastWeatherCont
+   forecastWeatherCont.append(col);
 }
 
 // Need function to display a 5 day weather forcast
-function renderForecast(dailyForcast, timezone) {
+function renderForecast(todayWeather, timezone) {
    var startDt = dayjs().tz(timezone).add(1, "day").startOf("day").unix();
    var endDt = dayjs().tz(timezone).add(6, "day").startOf("day").unix();
 
@@ -158,12 +176,12 @@ function renderForecast(dailyForcast, timezone) {
    heading.textContent = "5-Day Forecast:";
    headingCol.append(heading);
 
-   forecastContainer.innerHTML = '';
-  forecastContainer.append(headingCol);
-  for (var i = 0; i < dailyForecast.length; i++) {
+   forecastWeatherCont.innerHTML = '';
+  forecastWeatherCont.append(headingCol);
+  for (var i = 0; i < todayWeather.length; i++) {
     
-    if (dailyForecast[i].dt >= startDt && dailyForecast[i].dt < endDt) {
-      renderForecastCard(dailyForecast[i], timezone);
+    if (todayWeather[i].dt >= startDt && todayWeather[i].dt < endDt) {
+      renderForecastCard(todayWeather[i], timezone);
 }
 
 function renderItems(city, data) {
@@ -237,4 +255,4 @@ function handleSearchHistory(e) {
 // Need to initialize search histroy form
 initSearchHistory();
 userFormEl.addEventListener("submit", handleFormSubmit);
-searchHistoryCont.addEventListener("click", handleSearchHistory);
+searchHistoryCont.addEventListener('click', handleSearchHistory);
