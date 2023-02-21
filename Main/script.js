@@ -6,9 +6,9 @@ var apiKey = "9e9a3c70798d20916b97cab9a356da93";
 
 // Add DOM Elements
 var searchForm = document.querySelector("#search-form");
-var searchInput = document.querySelector("search-input");
+var searchInput = document.querySelector("#search-input");
 var todayForecast = document.querySelector("#today");
-var forecastWeatherCont = document.querySelector("forecast");
+var forecastWeatherCont = document.querySelector("#forecast");
 var searchHistoryCont = document.querySelector("#history");
 
 // Add plugins for timezone
@@ -117,7 +117,7 @@ function renderCurrentWeather(city, weather, timezone) {
 }
 
 // Function to fetch data from weather api to display the daily forecast
-function renderForecastCard(forecast, timezone) {
+function renderForecastCard(forecast, humidity, timezone) {
    // create variables for the data from the api
    var unixTs = forecast.dt;
    var iconUrl = `https://openweathermap.org/img/w/${forecast.weather[0].icon}.png`;
